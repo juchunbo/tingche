@@ -45,7 +45,7 @@ public class CounterController {
       count = counter.get().getCount();
     }
 
-    return ApiResponse.ok(count);
+    return ApiResponse.ok("这是新的"+count);
   }
 
 
