@@ -36,7 +36,7 @@ public class CounterController {
    * 获取当前计数
    * @return API response json
    */
-  @GetMapping(value = "/api/count")
+  @GetMapping(value = "/api/count/test")
   ApiResponse get() {
     logger.info("/api/count get request");
     Optional<Counter> counter = counterService.getCounter(1);
@@ -45,7 +45,7 @@ public class CounterController {
       count = counter.get().getCount();
     }
 
-    return ApiResponse.ok("这是新的"+count);
+    return ApiResponse.ok(count);
   }
 
 
