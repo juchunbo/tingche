@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tencent.wxcloudrun.dao.OrderMapper">
+    
+    <resultMap id="BaseResultMap" type="com.tencent.wxcloudrun.model.Order">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="parking_lot_id" property="parkingLotId" jdbcType="BIGINT"/>
+        <result column="owner_name" property="ownerName" jdbcType="VARCHAR"/>
+        <result column="owner_phone" property="ownerPhone" jdbcType="VARCHAR"/>
+        <result column="plate_number" property="plateNumber" jdbcType="VARCHAR"/>
+        <result column="parking_start" property="parkingStart" jdbcType="TIMESTAMP"/>
+        <result column="parking_end" property="parkingEnd" jdbcType="TIMESTAMP"/>
+        <result column="parking_days" property="parkingDays" jdbcType="INTEGER"/>
+        <result column="original_amount" property="originalAmount" jdbcType="DECIMAL"/>
+        <result column="coupon_amount" property="couponAmount" jdbcType="DECIMAL"/>
+        <result column="pay_amount" property="payAmount" jdbcType="DECIMAL"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="pickup_code" property="pickupCode" jdbcType="VARCHAR"/>
+        <result column="shuttle_type" property="shuttleType" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="transaction_id" property="transactionId" jdbcType="VARCHAR"/>
+        <result column="paid_at" property="paidAt" jdbcType="TIMESTAMP"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <insert id="insert" parameterType="com.tencent.wxcloudrun.model.Order" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (order_no, user_id, parking_lot_id, owner_name, owner_phone, plate_number, parking_start, parking_end, parking_days, original_amount, coupon_amount, pay_amount, status, pickup_code, shuttle_type, remark)
+        VALUES (#{orderNo}, #{userId}, #{parkingLotId}, #{ownerName}, #{ownerPhone}, #{plateNumber}, #{parkingStart}, #{parkingEnd}, #{parkingDays}, #{originalAmount}, #{couponAmount}, #{payAmount}, #{status}, #{pickupCode}, #{shuttleType}, #{remark})
+    </insert>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM orders WHERE id = #{id}
+    </select>
+    
+    <select id="selectByOrderNo" resultMap="BaseResultMap">
+        SELECT * FROM orders WHERE order_no = #{orderNo}
+    </select>
+    
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT * FROM orders WHERE user_id = #{userId}
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        ORDER BY created_at DESC
+    </select>
+    
+    <update id="updateById" parameterType="com.tencent.wxcloudrun.model.Order">
+        UPDATE orders
+        <set>
+            <if test="status != null">status = #{status},</if>
+            <if test="transactionId != null">transaction_id = #{transactionId},</if>
+            <if test="paidAt != null">paid_at = #{paidAt},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <update id="updateStatus">
+        UPDATE orders SET status = #{status} WHERE id = #{id}
+    </update>
+    
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tencent.wxcloudrun.dao.ParkingLotMapper">
+    
+    <resultMap id="BaseResultMap" type="com.tencent.wxcloudrun.model.ParkingLot">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="district" property="district" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="longitude" property="longitude" jdbcType="DECIMAL"/>
+        <result column="latitude" property="latitude" jdbcType="DECIMAL"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="price_per_day" property="pricePerDay" jdbcType="DECIMAL"/>
+        <result column="min_days" property="minDays" jdbcType="INTEGER"/>
+        <result column="rating" property="rating" jdbcType="DECIMAL"/>
+        <result column="monthly_sales" property="monthlySales" jdbcType="INTEGER"/>
+        <result column="images" property="images" jdbcType="VARCHAR"/>
+        <result column="features" property="features" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="distance_info" property="distanceInfo" jdbcType="VARCHAR"/>
+        <result column="transfer_info" property="transferInfo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM parking_lots WHERE id = #{id} AND status = 1
+    </select>
+    
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.tencent.wxcloudrun.dto.ParkingLotQueryDTO">
+        SELECT * FROM parking_lots
+        WHERE status = 1
+        <if test="city != null and city != ''">
+            AND city = #{city}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND (name LIKE CONCAT('%', #{keyword}, '%') OR address LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="type != null">
+            AND type = #{type}
+        </if>
+        ORDER BY monthly_sales DESC, rating DESC
+        LIMIT #{pageSize} OFFSET ${(pageNum - 1) * pageSize}
+    </select>
+    
+    <select id="selectHotList" resultMap="BaseResultMap">
+        SELECT * FROM parking_lots
+        WHERE status = 1
+        ORDER BY monthly_sales DESC, rating DESC
+        LIMIT #{limit}
+    </select>
+    
+    <insert id="insert" parameterType="com.tencent.wxcloudrun.model.ParkingLot" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO parking_lots (name, city, district, address, longitude, latitude, type, price_per_day, min_days, rating, monthly_sales, images, features, description, distance_info, transfer_info)
+        VALUES (#{name}, #{city}, #{district}, #{address}, #{longitude}, #{latitude}, #{type}, #{pricePerDay}, #{minDays}, #{rating}, #{monthlySales}, #{images}, #{features}, #{description}, #{distanceInfo}, #{transferInfo})
+    </insert>
+    
+    <update id="updateById" parameterType="com.tencent.wxcloudrun.model.ParkingLot">
+        UPDATE parking_lots
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="pricePerDay != null">price_per_day = #{pricePerDay},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+</mapper>

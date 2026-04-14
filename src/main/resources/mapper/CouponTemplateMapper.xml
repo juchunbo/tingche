@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tencent.wxcloudrun.dao.CouponTemplateMapper">
+    
+    <resultMap id="BaseResultMap" type="com.tencent.wxcloudrun.model.CouponTemplate">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="discount_amount" property="discountAmount" jdbcType="DECIMAL"/>
+        <result column="min_amount" property="minAmount" jdbcType="DECIMAL"/>
+        <result column="discount_rate" property="discountRate" jdbcType="DECIMAL"/>
+        <result column="valid_days" property="validDays" jdbcType="INTEGER"/>
+        <result column="total_count" property="totalCount" jdbcType="INTEGER"/>
+        <result column="issued_count" property="issuedCount" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM coupon_templates WHERE id = #{id}
+    </select>
+    
+    <select id="selectActiveList" resultMap="BaseResultMap">
+        SELECT * FROM coupon_templates WHERE status = 1 ORDER BY min_amount ASC
+    </select>
+    
+    <update id="updateIssuedCount">
+        UPDATE coupon_templates SET issued_count = issued_count + 1 WHERE id = #{id}
+    </update>
+    
+</mapper>
