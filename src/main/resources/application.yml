@@ -7,7 +7,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://10.17.102.213:3306/${MYSQL_DATABASE:springboot_demo}
     username: root
-    password: @Gaoyang12345678
+    password: "@Gaoyang12345678"
   mvc:
     view:
       suffix: .html
