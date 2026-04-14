@@ -15,3 +15,14 @@ spring:
 
 mybatis:
   mapper-locations: classpath*:mapper/*Mapper.xml
+
+wechat:
+  mini-program:
+    app-id: ${WECHAT_APP_ID:your-app-id}
+    app-secret: ${WECHAT_APP_SECRET:your-app-secret}
+  payment:
+    mch-id: ${WECHAT_MCH_ID:your-mch-id}
+    api-v3-key: ${WECHAT_API_V3_KEY:your-api-v3-key}
+    private-key-path: ${WECHAT_PRIVATE_KEY_PATH:/app/certs/apiclient_key.pem}
+    merchant-serial-number: ${WECHAT_MERCHANT_SERIAL:your-merchant-serial}
+    notify-url: ${WECHAT_NOTIFY_URL:http://localhost/api/payment/notify}
