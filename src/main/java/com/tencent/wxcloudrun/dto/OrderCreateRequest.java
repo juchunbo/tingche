@@ -16,6 +16,7 @@ public class OrderCreateRequest {
     private String ownerPhone;
     private String plateNumber;
     private String shuttleType;
+    private Integer passengerCount;
     private String remark;
     private Long couponId; // Optional coupon
 }

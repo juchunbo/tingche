@@ -19,6 +19,7 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="pickup_code" property="pickupCode" jdbcType="VARCHAR"/>
         <result column="shuttle_type" property="shuttleType" jdbcType="VARCHAR"/>
+        <result column="passenger_count" property="passengerCount" jdbcType="INTEGER"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="transaction_id" property="transactionId" jdbcType="VARCHAR"/>
         <result column="paid_at" property="paidAt" jdbcType="TIMESTAMP"/>
@@ -27,8 +28,8 @@
     </resultMap>
     
     <insert id="insert" parameterType="com.tencent.wxcloudrun.model.Order" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO orders (order_no, user_id, parking_lot_id, owner_name, owner_phone, plate_number, parking_start, parking_end, parking_days, original_amount, coupon_amount, pay_amount, status, pickup_code, shuttle_type, remark)
-        VALUES (#{orderNo}, #{userId}, #{parkingLotId}, #{ownerName}, #{ownerPhone}, #{plateNumber}, #{parkingStart}, #{parkingEnd}, #{parkingDays}, #{originalAmount}, #{couponAmount}, #{payAmount}, #{status}, #{pickupCode}, #{shuttleType}, #{remark})
+        INSERT INTO orders (order_no, user_id, parking_lot_id, owner_name, owner_phone, plate_number, parking_start, parking_end, parking_days, original_amount, coupon_amount, pay_amount, status, pickup_code, shuttle_type, passenger_count, remark)
+        VALUES (#{orderNo}, #{userId}, #{parkingLotId}, #{ownerName}, #{ownerPhone}, #{plateNumber}, #{parkingStart}, #{parkingEnd}, #{parkingDays}, #{originalAmount}, #{couponAmount}, #{payAmount}, #{status}, #{pickupCode}, #{shuttleType}, #{passengerCount}, #{remark})
     </insert>
     
     <select id="selectById" resultMap="BaseResultMap">

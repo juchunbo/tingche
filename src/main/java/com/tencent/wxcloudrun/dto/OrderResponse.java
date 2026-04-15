@@ -23,6 +23,7 @@ public class OrderResponse {
     private Integer status;
     private String pickupCode;
     private String shuttleType;
+    private Integer passengerCount;
     private String remark;
     private String statusText;
     private ParkingLotInfo parkingLot;

@@ -25,6 +25,7 @@ public class Order {
     private Integer status; // 1-Pending 2-Parking 3-Completed 4-Cancelled
     private String pickupCode;
     private String shuttleType;
+    private Integer passengerCount;
     private String remark;
     private String transactionId;
     private LocalDateTime paidAt;

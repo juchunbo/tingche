@@ -89,6 +89,7 @@ CREATE TABLE `orders` (
   `status` tinyint NOT NULL DEFAULT 1 COMMENT 'Status: 1-Pending 2-Parking 3-Completed 4-Cancelled',
   `pickup_code` varchar(16) DEFAULT NULL COMMENT 'Pickup code',
   `shuttle_type` varchar(32) DEFAULT NULL COMMENT 'Shuttle type',
+  `passenger_count` int DEFAULT 1 COMMENT 'Passenger count',
   `remark` varchar(512) DEFAULT NULL COMMENT 'Remark',
   `transaction_id` varchar(64) DEFAULT NULL COMMENT 'WeChat transaction ID',
   `paid_at` timestamp NULL DEFAULT NULL COMMENT 'Payment time',

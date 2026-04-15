@@ -93,6 +93,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(1); // Pending
         order.setPickupCode(pickupCode);
         order.setShuttleType(request.getShuttleType());
+        order.setPassengerCount(request.getPassengerCount() != null ? request.getPassengerCount() : 1);
         order.setRemark(request.getRemark());
         
         orderMapper.insert(order);
