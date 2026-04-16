@@ -50,12 +50,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
-        <!-- WeChat Payment SDK -->
-        <dependency>
-            <groupId>com.github.wechatpay-apiv3</groupId>
-            <artifactId>wechatpay-java</artifactId>
-            <version>0.2.12</version>
-        </dependency>
         <!-- Hutool Utility Library -->
         <dependency>
             <groupId>cn.hutool</groupId>

@@ -16,13 +16,14 @@ spring:
 mybatis:
   mapper-locations: classpath*:mapper/*Mapper.xml
 
+# 微信云托管配置
+# 云托管模式下不再需要 AppSecret、APIv3 Key、商户证书等敏感信息
+# 用户身份（openid/unionid）由云托管自动注入到请求 Header
+# 支付由云托管开放接口服务 /_/pay/unifiedOrder 统一处理
 wechat:
+  cloudrun:
+    env-id: ${CLOUDRUN_ENV:prod-4gkf9q4ze069b762}  # 云托管环境 ID，用于 unifiedOrder 下单
   mini-program:
-    app-id: ${WECHAT_APP_ID:your-app-id}
-    app-secret: ${WECHAT_APP_SECRET:your-app-secret}
+    app-id: ${WECHAT_APP_ID:wxeecb2a3bb27d4dbf}
   payment:
-    mch-id: ${WECHAT_MCH_ID:your-mch-id}
-    api-v3-key: ${WECHAT_API_V3_KEY:your-api-v3-key}
-    private-key-path: ${WECHAT_PRIVATE_KEY_PATH:/app/certs/apiclient_key.pem}
-    merchant-serial-number: ${WECHAT_MERCHANT_SERIAL:your-merchant-serial}
-    notify-url: ${WECHAT_NOTIFY_URL:http://localhost/api/payment/notify}
+    mch-id: ${WECHAT_MCH_ID:1107045416}

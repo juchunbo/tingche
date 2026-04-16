@@ -18,7 +18,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Order controller
+ * 订单控制器 - 云托管模式
+ * 
+ * 云托管模式下：
+ * - openid 从请求 Header x-wx-openid 获取（云托管自动注入）
+ * - 支付调用 /_/pay/unifiedOrder，返回的 payment 字段直接给前端
  */
 @Slf4j
 @RestController
@@ -35,7 +39,7 @@ public class OrderController {
     private PaymentService paymentService;
     
     /**
-     * Create order
+     * 创建订单
      */
     @PostMapping
     public ApiResponse createOrder(@RequestHeader("X-User-Id") Long userId,
@@ -46,7 +50,7 @@ public class OrderController {
     }
     
     /**
-     * Get order list for current user
+     * 获取用户订单列表
      */
     @GetMapping
     public ApiResponse getOrderList(@RequestHeader("X-User-Id") Long userId,
@@ -79,7 +83,7 @@ public class OrderController {
     }
     
     /**
-     * Get order detail
+     * 获取订单详情
      */
     @GetMapping("/{id}")
     public ApiResponse getOrderDetail(@RequestHeader("X-User-Id") Long userId,
@@ -108,7 +112,7 @@ public class OrderController {
     }
     
     /**
-     * Cancel order
+     * 取消订单
      */
     @PostMapping("/{id}/cancel")
     public ApiResponse cancelOrder(@RequestHeader("X-User-Id") Long userId,
@@ -121,11 +125,18 @@ public class OrderController {
     }
     
     /**
-     * Initiate payment
+     * 发起支付（云托管模式）
+     * 
+     * openid 从云托管自动注入的请求 Header x-wx-openid 中获取
+     * 后端调用 /_/pay/unifiedOrder，返回的 payment 字段直接给前端 wx.requestPayment
+     * 后端不需要也不允许再基于 prepay_id 做二次签名
+     * 
+     * @param openid 用户的微信 OpenID（从 Header x-wx-openid 获取，云托管自动注入）
+     * @param id 订单ID
+     * @return payment 参数，直接传给前端 wx.requestPayment
      */
     @PostMapping("/{id}/pay")
-    public ApiResponse payOrder(@RequestHeader("X-User-Id") Long userId,
-                                @RequestHeader("X-Openid") String openid,
+    public ApiResponse payOrder(@RequestHeader("x-wx-openid") String openid,
                                 @PathVariable Long id) {
         Map<String, String> payParams = paymentService.createPayment(id, openid);
         return ApiResponse.ok(payParams);

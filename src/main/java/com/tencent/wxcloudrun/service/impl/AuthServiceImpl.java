@@ -1,20 +1,25 @@
 package com.tencent.wxcloudrun.service.impl;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.tencent.wxcloudrun.dao.UserMapper;
 import com.tencent.wxcloudrun.dto.LoginRequest;
 import com.tencent.wxcloudrun.dto.LoginResponse;
 import com.tencent.wxcloudrun.model.User;
 import com.tencent.wxcloudrun.service.AuthService;
-import com.tencent.wxcloudrun.config.WechatConfig;
-import cn.hutool.http.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 认证服务实现类 - 实现用户登录和手机号绑定的具体业务逻辑
- * 负责与微信API交互、用户数据管理等功能
+ * 认证服务实现类 - 云托管模式
+ * 
+ * 云托管模式下用户身份由云托管自动注入到请求 Header：
+ * - x-wx-openid: 微信用户唯一标识
+ * - x-wx-unionid: 跨应用统一标识（如果绑定了开放平台）
+ * 
+ * 不再需要：
+ * - wx.login() 获取 code
+ * - code2Session 接口换取 openid
+ * - AppSecret 配置
  */
 @Slf4j
 @Service
@@ -24,45 +29,32 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private UserMapper userMapper;
     
-    /** 微信配置信息，包含AppID、AppSecret等配置 */
-    @Autowired
-    private WechatConfig wechatConfig;
-    
     /**
-     * 用户登录实现方法
+     * 用户登录实现方法（云托管模式）
+     * 
+     * 云托管模式下，openid 和 unionid 由云托管自动注入到请求 Header 中，
+     * 前端只需调用一次云托管请求，后端从 Header 中读取即可，无需再通过 code 换取。
+     * 
      * 主要流程：
-     * 1. 调用微信API，用code换取openid
-     * 2. 根据openid查询用户，如果不存在则创建新用户
+     * 1. 直接使用云托管注入的 openid（从 Controller 层通过 Header 传入）
+     * 2. 根据 openid 查询用户，如果不存在则创建新用户
      * 3. 如果用户已存在，则更新用户信息（昵称、头像）
      * 4. 返回用户信息给前端
      * 
-     * @param request 登录请求对象
+     * @param openid 云托管自动注入的微信 OpenID（从请求 Header x-wx-openid 获取）
+     * @param unionid 云托管自动注入的微信 UnionID（从请求 Header x-wx-unionid 获取，可能为空）
+     * @param request 登录请求对象（仅包含昵称和头像，不再包含 code）
      * @return 登录响应对象
      */
     @Override
-    public LoginResponse login(LoginRequest request) {
-        log.info("处理登录请求: {}", request);
+    public LoginResponse login(String openid, String unionid, LoginRequest request) {
+        log.info("处理云托管登录请求: openid={}", openid);
         
-        // 第一步：调用微信API，用登录code换取openid和unionid
-        String url = String.format("%s?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
-                wechatConfig.getMiniProgram().getCode2sessionUrl(),
-                wechatConfig.getMiniProgram().getAppId(),
-                wechatConfig.getMiniProgram().getAppSecret(),
-                request.getCode());
-        
-        String response = HttpUtil.get(url);
-        JSONObject json = JSONObject.parseObject(response);
-        
-        // 检查微信API返回是否有错误
-        if (json.containsKey("errcode")) {
-            log.error("微信登录失败: {}", response);
-            throw new RuntimeException("微信登录失败");
+        if (openid == null || openid.isEmpty()) {
+            throw new RuntimeException("云托管未注入 openid，请确认已开启开放接口服务");
         }
         
-        String openid = json.getString("openid");
-        String unionid = json.getString("unionid");
-        
-        // 第二步：根据openid查找用户
+        // 第一步：根据 openid 查找用户
         User user = userMapper.selectByOpenid(openid);
         if (user == null) {
             // 用户不存在，创建新用户
@@ -72,6 +64,7 @@ public class AuthServiceImpl implements AuthService {
             user.setNickname(request.getNickname());
             user.setAvatarUrl(request.getAvatarUrl());
             userMapper.insert(user);
+            log.info("新用户创建成功: openid={}", openid);
         } else {
             // 用户已存在，更新用户信息（如果前端传了新的昵称或头像）
             if (request.getNickname() != null) {
@@ -80,10 +73,16 @@ public class AuthServiceImpl implements AuthService {
             if (request.getAvatarUrl() != null) {
                 user.setAvatarUrl(request.getAvatarUrl());
             }
+            // 更新 unionid（如果之前没有，现在有了）
+            if (unionid != null && !unionid.isEmpty() && 
+                (user.getUnionid() == null || user.getUnionid().isEmpty())) {
+                user.setUnionid(unionid);
+            }
             userMapper.updateById(user);
+            log.info("用户信息更新成功: openid={}", openid);
         }
         
-        // 第三步：构建登录响应对象
+        // 第二步：构建登录响应对象
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setUserId(user.getId());
         loginResponse.setOpenid(user.getOpenid());

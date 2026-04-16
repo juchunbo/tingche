@@ -9,8 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 认证控制器 - 处理用户登录和手机号绑定相关接口
- * 提供微信小程序登录、手机号注册等功能
+ * 认证控制器 - 云托管模式
+ * 
+ * 处理用户登录和手机号绑定相关接口
+ * 云托管模式下，用户身份（openid/unionid）由云托管自动注入到请求 Header：
+ * - x-wx-openid: 微信用户唯一标识
+ * - x-wx-unionid: 跨应用统一标识（可选）
  */
 @Slf4j
 @RestController
@@ -22,16 +26,26 @@ public class AuthController {
     private AuthService authService;
     
     /**
-     * 微信小程序登录接口
-     * 接收小程序传来的code，调用微信API换取openid，完成用户登录
+     * 微信小程序登录接口（云托管模式）
      * 
-     * @param request 登录请求对象，包含微信登录code、用户昵称、头像等信息
+     * 云托管模式下，不再需要前端传 code。
+     * openid 和 unionid 由云托管自动注入到请求 Header 中：
+     * - x-wx-openid: 微信用户 OpenID（必传，云托管自动注入）
+     * - x-wx-unionid: 微信用户 UnionID（可选，云托管自动注入）
+     * 
+     * 前端只需传递用户昵称和头像即可完成登录。
+     * 
+     * @param openid 微信 OpenID，从请求 Header x-wx-openid 中获取（云托管自动注入）
+     * @param unionid 微信 UnionID，从请求 Header x-wx-unionid 中获取（云托管自动注入，可能为空）
+     * @param request 登录请求对象，包含用户昵称、头像等信息（不再包含 code）
      * @return 登录响应对象，包含用户ID、openid、昵称、头像、手机号等信息
      */
     @PostMapping("/login")
-    public ApiResponse login(@RequestBody LoginRequest request) {
-        log.info("收到登录请求");
-        return ApiResponse.ok(authService.login(request));
+    public ApiResponse login(@RequestHeader("x-wx-openid") String openid,
+                             @RequestHeader(value = "x-wx-unionid", required = false) String unionid,
+                             @RequestBody LoginRequest request) {
+        log.info("收到云托管登录请求: openid={}", openid);
+        return ApiResponse.ok(authService.login(openid, unionid, request));
     }
     
     /**
