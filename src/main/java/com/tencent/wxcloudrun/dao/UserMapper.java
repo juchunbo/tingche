@@ -14,4 +14,6 @@ public interface UserMapper {
     int updateById(User user);
     
     User selectById(@Param("id") Long id);
+    
+    User selectByPhone(@Param("phone") String phone);
 }

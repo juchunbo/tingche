@@ -14,7 +14,7 @@ public interface ParkingLotMapper {
     
     List<ParkingLot> selectList(ParkingLotQueryDTO query);
     
-    List<ParkingLot> selectHotList(@Param("limit") int limit);
+    List<ParkingLot> selectHotList(@Param("city") String city, @Param("limit") int limit);
     
     int insert(ParkingLot parkingLot);
     

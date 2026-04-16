@@ -36,7 +36,7 @@
             AND city = #{city}
         </if>
         <if test="keyword != null and keyword != ''">
-            AND (name LIKE CONCAT('%', #{keyword}, '%') OR address LIKE CONCAT('%', #{keyword}, '%'))
+            AND (name LIKE CONCAT(#{keyword}, '%') OR address LIKE CONCAT(#{keyword}, '%'))
         </if>
         <if test="type != null">
             AND type = #{type}
@@ -48,6 +48,9 @@
     <select id="selectHotList" resultMap="BaseResultMap">
         SELECT * FROM parking_lots
         WHERE status = 1
+        <if test="city != null and city != ''">
+            AND city = #{city}
+        </if>
         ORDER BY monthly_sales DESC, rating DESC
         LIMIT #{limit}
     </select>

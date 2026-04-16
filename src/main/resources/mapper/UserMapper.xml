@@ -21,6 +21,10 @@
         SELECT * FROM users WHERE id = #{id}
     </select>
     
+    <select id="selectByPhone" resultMap="BaseResultMap">
+        SELECT * FROM users WHERE phone = #{phone}
+    </select>
+    
     <insert id="insert" parameterType="com.tencent.wxcloudrun.model.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO users (openid, unionid, nickname, avatar_url, phone)
         VALUES (#{openid}, #{unionid}, #{nickname}, #{avatarUrl}, #{phone})

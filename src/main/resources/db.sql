@@ -24,6 +24,8 @@ CREATE TABLE `parking_lots` (
   `type` tinyint NOT NULL COMMENT 'Type: 1-Indoor 2-Outdoor',
   `price_per_day` decimal(10,2) NOT NULL COMMENT 'Price per day (CNY)',
   `min_days` int NOT NULL DEFAULT 1 COMMENT 'Minimum parking days',
+  `billing_type` tinyint NOT NULL DEFAULT 1 COMMENT 'Billing type: 1-Natural day 2-24 hour system',
+  `price_per_hour` decimal(10,2) DEFAULT NULL COMMENT 'Price per hour (only for billing_type=2)',
   `rating` decimal(3,1) DEFAULT 5.0 COMMENT 'Rating',
   `monthly_sales` int DEFAULT 0 COMMENT 'Monthly sales',
   `images` json DEFAULT NULL COMMENT 'Image URLs array',

@@ -28,7 +28,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
     }
     
     @Override
-    public List<ParkingLot> getHotList(int limit) {
-        return parkingLotMapper.selectHotList(limit);
+    public List<ParkingLot> getHotList(String city, int limit) {
+        return parkingLotMapper.selectHotList(city, limit);
     }
 }

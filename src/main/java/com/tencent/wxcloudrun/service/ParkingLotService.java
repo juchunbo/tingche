@@ -8,5 +8,5 @@ import java.util.List;
 public interface ParkingLotService {
     ParkingLot getById(Long id);
     List<ParkingLot> getList(ParkingLotQueryDTO query);
-    List<ParkingLot> getHotList(int limit);
+    List<ParkingLot> getHotList(String city, int limit);
 }
