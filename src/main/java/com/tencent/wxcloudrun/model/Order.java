@@ -2,7 +2,8 @@ package com.tencent.wxcloudrun.model;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
+
 
 /**
  * 订单模型 - 代表停车预订订单
@@ -31,10 +32,10 @@ public class Order {
     private String plateNumber;
     
     /** 计划停车开始时间 */
-    private LocalDateTime parkingStart;
+    private Date parkingStart;
     
     /** 计划停车结束时间 */
-    private LocalDateTime parkingEnd;
+    private Date parkingEnd;
     
     /** 停车总天数 */
     private Integer parkingDays;
@@ -67,13 +68,13 @@ public class Order {
     private String transactionId;
     
     /** 支付完成时间 */
-    private LocalDateTime paidAt;
+    private Date paidAt;
     
     /** 订单创建时间 */
-    private LocalDateTime createdAt;
+    private Date createdAt;
     
     /** 订单最后更新时间 */
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
     
     // === 瞬态字段（不存储到数据库，用于返回给前端） ===
     

@@ -9,7 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +44,6 @@ public class CouponServiceImpl implements CouponService {
         userCoupon.setUserId(userId);
         userCoupon.setTemplateId(templateId);
         userCoupon.setStatus(1); // Unused
-        userCoupon.setExpiresAt(LocalDateTime.now().plusDays(template.getValidDays()));
         
         userCouponMapper.insert(userCoupon);
         

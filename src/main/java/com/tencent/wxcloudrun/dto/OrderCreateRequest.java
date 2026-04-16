@@ -1,8 +1,12 @@
 package com.tencent.wxcloudrun.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 /**
  * 订单创建请求DTO - 包含创建新停车订单所需的数据
@@ -11,12 +15,17 @@ import java.time.LocalDateTime;
 public class OrderCreateRequest {
     /** 要预订的停车场ID */
     private Long parkingLotId;
-    
-    /** 计划停车开始时间 */
-    private LocalDateTime parkingStart;
-    
+
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date parkingStart;
+
     /** 计划停车结束时间 */
-    private LocalDateTime parkingEnd;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date parkingEnd;
+
     
     /** 车主姓名 */
     private String ownerName;

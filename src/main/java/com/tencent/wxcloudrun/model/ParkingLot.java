@@ -2,7 +2,8 @@ package com.tencent.wxcloudrun.model;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
+
 
 /**
  * 停车场模型 - 代表系统中的停车场
@@ -70,8 +71,8 @@ public class ParkingLot {
     private Integer status;
     
     /** 停车场创建时间 */
-    private LocalDateTime createdAt;
+    private Date createdAt;
     
     /** 停车场最后更新时间 */
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 }

@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +45,11 @@ public class OrderServiceImpl implements OrderService {
         }
         
         // Calculate parking days and amount
-        Duration duration = Duration.between(request.getParkingStart(), request.getParkingEnd());
+        Duration duration = Duration.between(
+                request.getParkingStart().toInstant(),
+                request.getParkingEnd().toInstant()
+        );
+
         int days = (int) duration.toDays();
         if (duration.toHours() % 24 > 0) {
             days += 1;
@@ -70,9 +76,13 @@ public class OrderServiceImpl implements OrderService {
         }
         
         // Generate order number
-        String orderNo = "P" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) 
+
+        String orderNo = "P"
+                + LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))
                 + RandomUtil.randomNumbers(6);
-        
+
+
         // Generate pickup code
         String pickupCode = RandomUtil.randomNumbers(6);
         
@@ -134,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderMapper.selectById(orderId);
         if (order != null && order.getStatus() == 1) {
             order.setTransactionId(transactionId);
-            order.setPaidAt(LocalDateTime.now());
+            order.setPaidAt(new Date());
             order.setStatus(2); // Parking
             orderMapper.updateById(order);
         }

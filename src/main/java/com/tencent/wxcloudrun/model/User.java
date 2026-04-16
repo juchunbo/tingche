@@ -1,7 +1,9 @@
 package com.tencent.wxcloudrun.model;
 
 import lombok.Data;
-import java.time.LocalDateTime;
+
+import java.util.Date;
+
 
 /**
  * 用户模型 - 代表系统中的用户
@@ -27,8 +29,8 @@ public class User {
     private String phone;
     
     /** 用户创建时间 */
-    private LocalDateTime createdAt;
+    private Date createdAt;
     
     /** 用户最后更新时间 */
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 }

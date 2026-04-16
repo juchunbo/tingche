@@ -2,7 +2,8 @@ package com.tencent.wxcloudrun.model;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
+
 
 /**
  * Coupon template model
@@ -19,6 +20,6 @@ public class CouponTemplate {
     private Integer totalCount;
     private Integer issuedCount;
     private Integer status; // 0-Disabled 1-Enabled
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 }
