@@ -8,6 +8,11 @@ spring:
     url: jdbc:mysql://10.36.105.247:3306/${MYSQL_DATABASE:springboot_demo}
     username: root
     password: "@Gaoyang12345678"
+    hikari:
+      max-lifetime: 1800000   # 30分钟
+      keepalive-time: 300000 # 5分钟
+
+
   mvc:
     view:
       suffix: .html
